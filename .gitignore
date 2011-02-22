@@ -1,0 +1,18 @@
+# Eclipse settings
+*.settings/
+
+# Generated output
+*bin*/
+*html-template/
+
+# FlexUnit-generated files
+*.FlexUnitSettings/
+FlexUnitApplication.*
+FlexUnitCompilerApplication.*
+
+# Mac-generated
+.DS_Store
+
+# Temp
+/morefluent
+/libs/morefluent-signals-support
