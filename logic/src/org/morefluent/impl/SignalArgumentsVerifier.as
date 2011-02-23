@@ -44,7 +44,6 @@ package org.morefluent.impl
             if (observersOf.length == 0)
                 throw new VerifyingOnNonRegisteredObserver("Not listening to " + event + " on " + target + " in " + (useCapture ? "capture" : "") + ". " +
                                                            "Did you forget to to add observe('" + event + ", " + useCapture + "').on(" + target + "); ?");
-            var count:int = 0;
             for each (var observation:VerifiableObservation in observersOf)
             {
                 var events:Array = observation.eventsFor(target, event, useCapture);

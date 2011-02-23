@@ -27,10 +27,10 @@ package org.morefluent.integrations.flexunit4
     import org.osflash.signals.utils.SignalAsync;
     import org.osflash.signals.utils.SignalAsyncEvent;
     
-    public function afterSignal(target:ISignal, timeout:int = 1000, priority:int = 0):SignalSynchronizer
+    public function afterSignal(target:ISignal, timeout:int = 1000):SignalSynchronizer
     {
         var subject:EventSubjectImpl = 
-            new EventSubjectImpl(SignalAsyncEvent.CALLED, FlexUnit4AssertableContext.contextFor(currentTestCase), timeout, false, priority);
+            new EventSubjectImpl(SignalAsyncEvent.CALLED, FlexUnit4AssertableContext.contextFor(currentTestCase), timeout);
         
         subject.on(new SignalAsync(target));
         
