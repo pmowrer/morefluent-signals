@@ -1,5 +1,11 @@
 # Eclipse settings
 *.settings/
+*.project
+
+# Flash builder settings
+.actionScriptProperties
+.flexProperties
+.flexLibProperties
 
 # Generated output
 *bin*/
