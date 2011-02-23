@@ -31,21 +31,23 @@ package org.morefluent.impl
     import org.morefluent.api.VerifyingOnNonRegisteredObserver;
     import org.osflash.signals.utils.SignalSyncEvent;
     
-    public class SignalArgumentsVerifier implements ObservationVerifier
+    public class SignalArgumentsVerifier extends Times implements ObservationVerifier
     {
         private var args:Array;
     
         public function SignalArgumentsVerifier(args:Array)
         {
+            super(1);
+            
             this.args = args;
         }
     
-        public function verify(context:AssertableContext, target:IEventDispatcher, event:String, useCapture:Boolean = false):void
+        override public function verify(context:AssertableContext, target:IEventDispatcher, event:String, useCapture:Boolean = false):void
         {
+            super.verify(context, target, event, useCapture);
+            
             var observersOf:Array = context.observersOf(target, event, useCapture);
-            if (observersOf.length == 0)
-                throw new VerifyingOnNonRegisteredObserver("Not listening to " + event + " on " + target + " in " + (useCapture ? "capture" : "") + ". " +
-                                                           "Did you forget to to add observe('" + event + ", " + useCapture + "').on(" + target + "); ?");
+
             for each (var observation:VerifiableObservation in observersOf)
             {
                 var events:Array = observation.eventsFor(target, event, useCapture);
