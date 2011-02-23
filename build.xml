@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="iso-8859-1"?> 
+<project name="morefluent-signals" basedir="." default="package">
+
+    <!-- Enable system environment vars to be referenced -->
+    <property environment="env" />
+
+    <!-- Construct library filename from version properties file -->
+    <property file="${basedir}/version.properties" />
+    <property name="build.finalName" 
+              value="${build.filename}-${build.version}" 
+    />
+
+    <!-- Source locations -->
+    <property name="src.dir" location="${basedir}/logic/src" />    
+    <property name="src.lib.dir" location="${src.dir}/../libs" />
+    <property name="test.dir" location="${basedir}/test/src" />    
+    <property name="test.lib.dir" location="${test.dir}/../libs" />
+    <property name="shared.lib.dir" location="${basedir}/libs" />
+    <property name="build.lib.dir" location="${shared.lib.dir}/build" />
+
+    <!-- Build generation locations -->
+    <property name="dist.dir" location="${basedir}/dist" />
+    <property name="dist.bin.dir" location="${dist.dir}/bin" />
+    <property name="dist.doc.dir" location="${dist.dir}/doc" />
+    <property name="report.dir" location="${dist.dir}/report" />
+    <property name="report.flexunit.dir" location="${report.dir}/flexunit" />
+
+    <!-- Flex SDK source -->
+    <property name="FLEX_HOME" location="${env.FLEX_HOME}" />
+
+    <!-- Flex & FlexUnit Ant Task locations -->
+    <taskdef resource="flexTasks.tasks" 
+             classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"
+    />
+    <taskdef resource="flexUnitTasks.tasks" 
+             classpath="${build.lib.dir}/flexUnitTasks-4.1.0_RC2-4.jar"
+    />
+
+    <!-- Target definitions -->
+    <target name="clean">
+        <delete dir="${dist.dir}" />
+        <delete dir="${dist.bin.dir}" />
+        <delete dir="${dist.doc.dir}" />
+        <delete dir="${report.dir}" />
+        <delete dir="${report.flexunit.dir}" />
+    </target>
+
+    <target name="init">
+        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${dist.bin.dir}" />
+        <mkdir dir="${dist.doc.dir}" />
+        <mkdir dir="${report.dir}" />
+        <mkdir dir="${report.flexunit.dir}" />
+    </target>
+
+    <target name="compile" depends="init">
+        <compc output="${dist.bin.dir}/${build.finalName}.swc">
+            <include-sources dir="${src.dir}">
+                <include name="**/*.as" />
+                <include name="**/*.mxml" />
+            </include-sources>
+            <source-path path-element="${src.dir}" />
+            <library-path dir="${src.lib.dir}" append="true">
+                <include name="*.swc" />
+            </library-path>
+            <external-library-path dir="${shared.lib.dir}" append="true">
+                <include name="*.swc" />
+            </external-library-path>
+
+            <metadata>
+                <creator>Patrick Mowrer</creator>
+            </metadata>
+        </compc>
+    </target>
+
+    <target name="test" depends="compile">
+        <!-- Compile TestRunner with source library -->
+        <mxmlc file="${test.dir}/TestRunner.mxml" output="${dist.bin.dir}/TestRunner.swf">
+            <library-path dir="${dist.bin.dir}" append="true">
+                <include name="${build.finalName}.swc" />
+            </library-path>
+            <library-path dir="${test.lib.dir}" append="true">
+                <include name="*.swc" />
+            </library-path>
+            <library-path dir="${shared.lib.dir}" append="true">
+                <include name="*.swc" />
+            </library-path>
+        </mxmlc>
+
+        <!-- Execute the TestRunner.swf to display test results -->
+        <flexunit swf="${dist.bin.dir}/TestRunner.swf"
+                  toDir="${report.flexunit.dir}"
+                  verbose="true" 
+        />
+    </target>
+
+    <target name="report" depends="test">
+        <!-- Generate readable report for FlexUnit -->
+        <junitreport todir="${report.flexunit.dir}">
+            <fileset dir="${report.flexunit.dir}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report format="frames" todir="${report.flexunit.dir}/html" />
+        </junitreport>
+    </target>
+
+    <target name="package" depends="report">
+        <!-- Create distribution for binaries with docs -->
+        <zip destfile="${dist.dir}/${build.finalName}.zip">
+            <zipfileset dir="${dist.doc.dir}" prefix="docs" />
+            <zipfileset dir="${dist.bin.dir}">
+                <include name="${build.finalName}.swc" />
+            </zipfileset>
+        </zip>
+    </target>
+</project>

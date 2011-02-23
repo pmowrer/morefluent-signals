@@ -1,6 +1,6 @@
 # Eclipse settings
-*.settings/
-*.project
+.settings/
+.project
 
 # Flash builder settings
 .actionScriptProperties
@@ -8,16 +8,19 @@
 .flexLibProperties
 
 # Generated output
-*bin*/
-*html-template/
+bin*/
+html-template/
 
 # FlexUnit-generated files
-*.FlexUnitSettings/
+.FlexUnitSettings/
 FlexUnitApplication.*
 FlexUnitCompilerApplication.*
 
 # Mac-generated
 .DS_Store
+
+# Build-generated
+/dist
 
 # Temp
 /morefluent
