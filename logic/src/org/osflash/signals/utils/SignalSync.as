@@ -18,21 +18,41 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.impl
+package org.osflash.signals.utils
 {
-    import org.morefluent.api.Assertion;
-    import org.morefluent.api.SignalSynchronizer;
+    import flash.events.EventDispatcher;
+    import flash.utils.Dictionary;
     
-    public class SignalSynchronizerImpl extends EventSynchronizer implements SignalSynchronizer
+    import org.osflash.signals.ISignal;
+    
+    public class SignalSync extends EventDispatcher
     {
-        public function SignalSynchronizerImpl(subject:EventSubjectImpl)
+        private static var wrappedSignals:Dictionary = new Dictionary(true);
+        
+        public static function getWrapped(signal:ISignal):SignalSync
         {
-            super(subject);
+            if(wrappedSignals[signal])
+            {
+                return wrappedSignals[signal];
+            }
+            else
+            {
+                var wrappedSignal:SignalSync = new SignalSync(signal);
+                wrappedSignals[signal] = wrappedSignal;
+                
+                return wrappedSignal;
+            }
+        }
+
+        public function SignalSync(signal:ISignal)
+        {
+            signal.add(onCalled);
         }
         
-        public function assertOnArguments():Assertion
+        private function onCalled(a:* = null, b:* = null, c:* = null, d:* = null,
+                                  e:* = null, f:* = null, g:* = null, h:* = null):void
         {
-            return super.assertOnEvent("args");
+            dispatchEvent(new SignalSyncEvent(SignalSyncEvent.CALLED, arguments));
         }
     }
 }

@@ -18,21 +18,13 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.impl
+package org.morefluent.integrations.flexunit4
 {
-    import org.morefluent.api.Assertion;
-    import org.morefluent.api.SignalSynchronizer;
+    import org.morefluent.api.ObservationVerifier;
+    import org.morefluent.impl.SignalArgumentsVerifier;
     
-    public class SignalSynchronizerImpl extends EventSynchronizer implements SignalSynchronizer
+    public function withArguments(args:Array):ObservationVerifier
     {
-        public function SignalSynchronizerImpl(subject:EventSubjectImpl)
-        {
-            super(subject);
-        }
-        
-        public function assertOnArguments():Assertion
-        {
-            return super.assertOnEvent("args");
-        }
+        return new SignalArgumentsVerifier(args);
     }
 }

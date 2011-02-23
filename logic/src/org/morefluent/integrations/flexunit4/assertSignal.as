@@ -18,10 +18,19 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.api
+package org.morefluent.integrations.flexunit4
 {
-    public interface SignalSynchronizer extends Synchronizer
+    import org.morefluent.api.SignalAssertion;
+    import org.morefluent.impl.ImmediateAssertionSpecifier;
+    import org.morefluent.impl.ImmediateSignalAssertion;
+    import org.morefluent.impl.ValueExtractor;
+    import org.osflash.signals.ISignal;
+    import org.osflash.signals.utils.SignalSync;
+
+    public function assertSignal(target:ISignal):SignalAssertion
     {
-        function assertOnArguments():Assertion;
+        return new ImmediateSignalAssertion(FlexUnit4AssertableContext.contextFor(currentTestCase),
+                                          new ValueExtractor(SignalSync.getWrapped(target)),
+                                          new ImmediateAssertionSpecifier(assert));
     }
 }

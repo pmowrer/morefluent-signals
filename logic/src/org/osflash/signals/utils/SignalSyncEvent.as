@@ -18,21 +18,31 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.impl
+package org.osflash.signals.utils
 {
-    import org.morefluent.api.Assertion;
-    import org.morefluent.api.SignalSynchronizer;
+    import flash.events.Event;
     
-    public class SignalSynchronizerImpl extends EventSynchronizer implements SignalSynchronizer
+    public class SignalSyncEvent extends Event
     {
-        public function SignalSynchronizerImpl(subject:EventSubjectImpl)
+        public static const CALLED:String = "org.osflash.signals.utils.SignalSyncEvent.CALLED";
+            
+        private var _args:Array;
+        
+        public function SignalSyncEvent(type:String, args:Array)
         {
-            super(subject);
+            super(type);
+            
+            _args = args;
         }
         
-        public function assertOnArguments():Assertion
+        public function get args():Array
         {
-            return super.assertOnEvent("args");
+            return _args;
+        }
+        
+        override public function clone():Event
+        {
+            return new SignalSyncEvent(type, _args);
         }
     }
 }

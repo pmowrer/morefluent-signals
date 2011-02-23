@@ -18,10 +18,33 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.api
+package org.morefluent.impl
 {
-    public interface SignalSynchronizer extends Synchronizer
+    import org.morefluent.api.AssertableContext;
+    import org.morefluent.api.AssertedValue;
+    import org.morefluent.api.Assertion;
+    import org.morefluent.api.AssertionSpecifier;
+    import org.morefluent.api.ObservationVerifier;
+    import org.morefluent.api.SignalAssertion;
+    import org.morefluent.api.Verifiers;
+    import org.osflash.signals.utils.SignalSyncEvent;
+
+    public class ImmediateSignalAssertion extends BaseAssertion implements SignalAssertion
     {
-        function assertOnArguments():Assertion;
+        public function ImmediateSignalAssertion(context:AssertableContext, assertedValue:AssertedValue, assertionSpecifier:AssertionSpecifier)
+        {
+            super(context, assertedValue, assertionSpecifier);
+        }
+    
+        override protected function thatAsserter(asserter:Asserter):Assertion
+        {
+            asserter.assert(context, assertedValue.value);
+            return this;
+        }
+        
+        public function dispatched(verifier:ObservationVerifier = null):Assertion
+        {
+            return thatAsserter(new ObservedEventAsserter(SignalSyncEvent.CALLED, verifier || Verifiers.once()));
+        }
     }
 }

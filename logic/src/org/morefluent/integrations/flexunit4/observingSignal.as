@@ -18,10 +18,21 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.api
+package org.morefluent.integrations.flexunit4
 {
-    public interface SignalSynchronizer extends Synchronizer
+    import org.morefluent.impl.ObserverSubjectImpl;
+    import org.osflash.signals.ISignal;
+    import org.osflash.signals.utils.SignalSync;
+    import org.osflash.signals.utils.SignalSyncEvent;
+    
+    public function observingSignal(target:ISignal):void
     {
-        function assertOnArguments():Assertion;
+        var context:FlexUnit4AssertableContext = FlexUnit4AssertableContext.contextFor(currentTestCase);
+        var subject:ObserverSubjectImpl = new ObserverSubjectImpl();
+        
+        subject.observing(SignalSyncEvent.CALLED);
+        subject.on(SignalSync.getWrapped(target));
+        
+        context.registerObserver(subject);
     }
 }
