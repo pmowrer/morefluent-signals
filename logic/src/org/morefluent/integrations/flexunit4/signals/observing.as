@@ -18,14 +18,16 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.integrations.flexunit4
+package org.morefluent.integrations.flexunit4.signals
 {
     import org.morefluent.impl.ObserverSubjectImpl;
     import org.osflash.signals.ISignal;
     import org.osflash.signals.utils.SignalSync;
     import org.osflash.signals.utils.SignalSyncEvent;
+    import org.morefluent.integrations.flexunit4.FlexUnit4AssertableContext;
+    import org.morefluent.integrations.flexunit4.currentTestCase;
     
-    public function observingSignal(target:ISignal):void
+    public function observing(target:ISignal):void
     {
         var context:FlexUnit4AssertableContext = FlexUnit4AssertableContext.contextFor(currentTestCase);
         var subject:ObserverSubjectImpl = new ObserverSubjectImpl();

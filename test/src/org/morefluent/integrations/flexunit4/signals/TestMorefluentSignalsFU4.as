@@ -18,13 +18,15 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.integrations.flexunit4
+package org.morefluent.integrations.flexunit4.signals
 {
     import flash.utils.setTimeout;
     
     import org.flexunit.rules.IMethodRule;
     import org.morefluent.integrations.flexunit4.never;
     import org.osflash.signals.Signal;
+    import org.morefluent.integrations.flexunit4.MorefluentRule;
+    import org.morefluent.integrations.flexunit4.once;
 
     public class TestMorefluentSignalsFU4
     {
@@ -36,7 +38,7 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal();
     
-            afterSignal(signal, 1000).pass();
+            after(signal, 1000).pass();
             
             setTimeout(new Function(), 500);
             
@@ -48,7 +50,7 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal();
             
-            afterSignal(signal, 1000).fail();
+            after(signal, 1000).fail();
             
             setTimeout(new Function(), 500);
             
@@ -60,7 +62,7 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal();
             
-            afterSignal(signal).pass();
+            after(signal).pass();
         }
         
         [Test(async)]
@@ -68,7 +70,7 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal(String, Number);
             
-            afterSignal(signal).assertOnArguments().equals(["stringArg", 12345]);
+            after(signal).assertOnArguments().equals(["stringArg", 12345]);
             
             signal.dispatch("stringArg", 12345);
         }
@@ -78,7 +80,7 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal(String, Number);
             
-            afterSignal(signal).assertOnArguments().equals(["stringArg", 54321]);
+            after(signal).assertOnArguments().equals(["stringArg", 54321]);
             
             signal.dispatch("stringArg", 12345);
         }
@@ -88,11 +90,11 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal();
             
-            observingSignal(signal);
+            observing(signal);
             
             signal.dispatch();
             
-            assertSignal(signal).dispatched(once());
+            assert(signal).dispatched(once());
         }
         
         [Test(expects="flexunit.framework.AssertionFailedError")]
@@ -100,11 +102,11 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal();
             
-            observingSignal(signal);
+            observing(signal);
             
             signal.dispatch();
             
-            assertSignal(signal).dispatched(never());
+            assert(signal).dispatched(never());
         }
         
         [Test]
@@ -112,11 +114,11 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal(String, Number);
             
-            observingSignal(signal);
+            observing(signal);
             
             signal.dispatch("stringArg", 12345);
             
-            assertSignal(signal).dispatched(withArguments(["stringArg", 12345]));
+            assert(signal).dispatched(withArguments(["stringArg", 12345]));
         }
 
         [Test(expects="flexunit.framework.AssertionFailedError")]
@@ -124,11 +126,11 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal(String, Number);
             
-            observingSignal(signal);
+            observing(signal);
             
             signal.dispatch("stringArg", 12345);
             
-            assertSignal(signal).dispatched(withArguments(["stringArg", 54321]));
+            assert(signal).dispatched(withArguments(["stringArg", 54321]));
         }
     }
 }

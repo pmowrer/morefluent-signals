@@ -11,7 +11,7 @@
             import org.flexunit.listeners.CIListener;
             import org.flexunit.listeners.UIListener;
             import org.flexunit.runner.FlexUnitCore;
-            import org.morefluent.integrations.flexunit4.TestMorefluentSignalsFU4;
+            import org.morefluent.integrations.flexunit4.signals.TestMorefluentSignalsFU4;
              
             public function runTests():void 
             {

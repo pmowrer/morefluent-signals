@@ -18,22 +18,13 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.integrations.flexunit4
+package org.morefluent.integrations.flexunit4.signals
 {
-    import org.morefluent.api.SignalSynchronizer;
-    import org.morefluent.impl.EventSubjectImpl;
-    import org.morefluent.impl.SignalSynchronizerImpl;
-    import org.osflash.signals.ISignal;
-    import org.osflash.signals.utils.SignalAsync;
-    import org.osflash.signals.utils.SignalAsyncEvent;
+    import org.morefluent.api.ObservationVerifier;
+    import org.morefluent.impl.SignalArgumentsVerifier;
     
-    public function afterSignal(target:ISignal, timeout:int = 1000):SignalSynchronizer
+    public function withArguments(args:Array):ObservationVerifier
     {
-        var subject:EventSubjectImpl = 
-            new EventSubjectImpl(SignalAsyncEvent.CALLED, FlexUnit4AssertableContext.contextFor(currentTestCase), timeout);
-        
-        subject.on(new SignalAsync(target));
-        
-        return new SignalSynchronizerImpl(subject);
+        return new SignalArgumentsVerifier(args);
     }
 }

@@ -18,7 +18,7 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.integrations.flexunit4
+package org.morefluent.integrations.flexunit4.signals
 {
     import org.morefluent.api.SignalAssertion;
     import org.morefluent.impl.ImmediateAssertionSpecifier;
@@ -26,8 +26,10 @@ package org.morefluent.integrations.flexunit4
     import org.morefluent.impl.ValueExtractor;
     import org.osflash.signals.ISignal;
     import org.osflash.signals.utils.SignalSync;
+    import org.morefluent.integrations.flexunit4.FlexUnit4AssertableContext;
+    import org.morefluent.integrations.flexunit4.currentTestCase;
 
-    public function assertSignal(target:ISignal):SignalAssertion
+    public function assert(target:ISignal):SignalAssertion
     {
         return new ImmediateSignalAssertion(FlexUnit4AssertableContext.contextFor(currentTestCase),
                                           new ValueExtractor(SignalSync.getWrapped(target)),
