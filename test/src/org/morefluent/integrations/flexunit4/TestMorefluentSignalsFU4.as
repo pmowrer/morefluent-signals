@@ -19,6 +19,8 @@
  **/
 package org.morefluent.integrations.flexunit4
 {
+    import flash.utils.setTimeout;
+    
     import org.flexunit.rules.IMethodRule;
     import org.osflash.signals.Signal;
 
@@ -32,7 +34,9 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal();
     
-            afterSignal(signal).pass();
+            afterSignal(signal, 1000).pass();
+            
+            setTimeout(new Function(), 500);
             
             signal.dispatch();
         }
@@ -42,7 +46,9 @@ package org.morefluent.integrations.flexunit4
         {
             var signal:Signal = new Signal();
             
-            afterSignal(signal).fail();
+            afterSignal(signal, 1000).fail();
+            
+            setTimeout(new Function(), 500);
             
             signal.dispatch();
         }
@@ -73,6 +79,18 @@ package org.morefluent.integrations.flexunit4
             afterSignal(signal).assertOnArguments().equals(["stringParam", 54321]);
             
             signal.dispatch("stringParam", 12345);
+        }
+        
+        [Test]
+        public function testShouldAllowSynchronousVerificationOfEvents():void
+        {
+            // given
+            var dispatcher:EventDispatcher = new EventDispatcher();
+            observing("someEvent").on(dispatcher);
+            // when
+            dispatcher.dispatchEvent(new Event("someEvent"));
+            // then
+            assert(dispatcher).observed("someEvent", once());
         }
 
     
