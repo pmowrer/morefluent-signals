@@ -40,9 +40,7 @@ package org.morefluent.integrations.flexunit4.signals
     
             after(signal, 1000).pass();
             
-            setTimeout(new Function(), 500);
-            
-            signal.dispatch();
+            setTimeout(function():void { signal.dispatch(); }, 500);
         }
         
         [Test(async, expects="flexunit.framework::AssertionFailedError")]
@@ -52,9 +50,7 @@ package org.morefluent.integrations.flexunit4.signals
             
             after(signal, 1000).fail();
             
-            setTimeout(new Function(), 500);
-            
-            signal.dispatch();
+            setTimeout(function():void { signal.dispatch(); }, 500);
         }
         
         [Test(async, expects="Error")]
@@ -72,7 +68,7 @@ package org.morefluent.integrations.flexunit4.signals
             
             after(signal).assertOnArguments().equals(["stringArg", 12345]);
             
-            signal.dispatch("stringArg", 12345);
+            setTimeout(function():void { signal.dispatch("stringArg", 12345); }, 500);
         }
         
         [Test(async, expects="flexunit.framework::AssertionFailedError")]
@@ -82,7 +78,7 @@ package org.morefluent.integrations.flexunit4.signals
             
             after(signal).assertOnArguments().equals(["stringArg", 54321]);
             
-            signal.dispatch("stringArg", 12345);
+            setTimeout(function():void { signal.dispatch("stringArg", 12345); }, 500);
         }
         
         [Test]

@@ -22,6 +22,8 @@ package org.morefluent.impl
 {
     import flash.events.IEventDispatcher;
     
+    import org.hamcrest.Matcher;
+    import org.hamcrest.core.allOf;
     import org.hamcrest.object.equalTo;
     import org.morefluent.api.AssertableContext;
     import org.morefluent.api.ObservationVerifier;
@@ -50,6 +52,9 @@ package org.morefluent.impl
     
                 for each(var signalEvent:SignalSyncEvent in events)
                 {
+                    if(args.length != signalEvent.args.length)
+                        context.fail(null, "Expected " + args.length + " signal arguments, but received " + signalEvent.args.length + " arguments.");
+                    
                     if(!argumentsMatch(signalEvent))
                         context.fail(null, "Expected signal arguments: " + args + ", but was " + signalEvent.args + ".");
                 }
@@ -58,7 +63,20 @@ package org.morefluent.impl
         
         private function argumentsMatch(event:SignalSyncEvent):Boolean
         {
-            return equalTo(args).matches(event.args);
+            for(var index:uint = 0; index < args.length; index++)
+            {
+                var argumentMatcher:Matcher;
+                                
+                if(args[index] is Matcher)
+                    argumentMatcher = args[index];
+                else
+                    argumentMatcher = equalTo(args[index]);
+                
+                if(!argumentMatcher.matches(event.args[index]))
+                    return false;
+            }
+            
+            return true;
         }
     }
 }
