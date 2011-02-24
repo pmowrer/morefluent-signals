@@ -37,10 +37,10 @@ package org.morefluent.integrations.flexunit4.signals
         public function shouldPassOnSignal():void
         {
             var signal:Signal = new Signal();
-    
-            after(signal, 1000).pass();
             
             setTimeout(function():void { signal.dispatch(); }, 500);
+    
+            after(signal, 1000).pass();
         }
         
         [Test(async, expects="flexunit.framework::AssertionFailedError")]
@@ -48,9 +48,9 @@ package org.morefluent.integrations.flexunit4.signals
         {
             var signal:Signal = new Signal();
             
-            after(signal, 1000).fail();
-            
             setTimeout(function():void { signal.dispatch(); }, 500);
+            
+            after(signal, 1000).fail();
         }
         
         [Test(async, expects="Error")]
@@ -66,9 +66,9 @@ package org.morefluent.integrations.flexunit4.signals
         {
             var signal:Signal = new Signal(String, Number);
             
-            after(signal).assertOnArguments().equals(["stringArg", 12345]);
-            
             setTimeout(function():void { signal.dispatch("stringArg", 12345); }, 500);
+            
+            after(signal).assertOnArguments().equals(["stringArg", 12345]);
         }
         
         [Test(async, expects="flexunit.framework::AssertionFailedError")]
@@ -76,9 +76,9 @@ package org.morefluent.integrations.flexunit4.signals
         {
             var signal:Signal = new Signal(String, Number);
             
-            after(signal).assertOnArguments().equals(["stringArg", 54321]);
-            
             setTimeout(function():void { signal.dispatch("stringArg", 12345); }, 500);
+            
+            after(signal).assertOnArguments().equals(["stringArg", 54321]);
         }
         
         [Test]
