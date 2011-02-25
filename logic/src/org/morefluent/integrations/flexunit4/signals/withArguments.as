@@ -20,11 +20,11 @@
 
 package org.morefluent.integrations.flexunit4.signals
 {
-    import org.morefluent.api.ObservationVerifier;
-    import org.morefluent.impl.SignalArgumentsVerifier;
+    import org.morefluent.api.SignalObservationVerifier;
+    import org.morefluent.impl.SignalVerifiers;
     
-    public function withArguments(... rest):ObservationVerifier
+    public function withArguments(... rest):SignalObservationVerifier
     {
-        return new SignalArgumentsVerifier(rest);
+        return SignalVerifiers.withArguments.apply(null, rest);
     }
 }

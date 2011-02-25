@@ -22,6 +22,7 @@ package org.osflash.signals.utils
 {
     import flash.events.EventDispatcher;
     import flash.utils.Dictionary;
+    import flash.utils.getQualifiedClassName;
     
     import org.osflash.signals.ISignal;
     
@@ -43,9 +44,13 @@ package org.osflash.signals.utils
                 return wrappedSignal;
             }
         }
+        
+        private var signal:ISignal;
 
         public function SignalSync(signal:ISignal)
         {
+            this.signal = signal;
+            
             signal.add(onCalled);
         }
         
@@ -53,6 +58,11 @@ package org.osflash.signals.utils
                                   e:* = null, f:* = null, g:* = null, h:* = null):void
         {
             dispatchEvent(new SignalSyncEvent(SignalSyncEvent.CALLED, arguments));
+        }
+        
+        override public function toString():String
+        {
+            return getQualifiedClassName(signal);
         }
     }
 }

@@ -22,6 +22,6 @@ package org.morefluent.api
 {
     public interface SignalAssertion
     {
-        function dispatched(verifier:ObservationVerifier = null):Assertion
+        function dispatched(verifier:SignalObservationVerifier = null):Assertion
     }
 }

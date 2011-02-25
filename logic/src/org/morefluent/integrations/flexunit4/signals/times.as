@@ -18,31 +18,14 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
-package org.morefluent.impl
+package org.morefluent.integrations.flexunit4.signals
 {
-    import org.morefluent.api.AssertableContext;
-    import org.morefluent.api.AssertedValue;
-    import org.morefluent.api.Assertion;
-    import org.morefluent.api.AssertionSpecifier;
-    import org.morefluent.api.SignalAssertion;
+    import org.hamcrest.object.equalTo;
     import org.morefluent.api.SignalObservationVerifier;
-
-    public class ImmediateSignalAssertion extends BaseAssertion implements SignalAssertion
-    {
-        public function ImmediateSignalAssertion(context:AssertableContext, assertedValue:AssertedValue, assertionSpecifier:AssertionSpecifier)
-        {
-            super(context, assertedValue, assertionSpecifier);
-        }
+    import org.morefluent.impl.SignalVerifiers;
     
-        override protected function thatAsserter(asserter:Asserter):Assertion
-        {
-            asserter.assert(context, assertedValue.value);
-            return this;
-        }
-        
-        public function dispatched(verifier:SignalObservationVerifier = null):Assertion
-        {
-            return thatAsserter(new ObservedSignalAsserter(verifier || SignalVerifiers.once()));
-        }
+    public function times(count:uint):SignalObservationVerifier
+    {
+        return SignalVerifiers.times(equalTo(count));
     }
 }

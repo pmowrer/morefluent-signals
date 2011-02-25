@@ -23,20 +23,23 @@ package org.morefluent.integrations.flexunit4.signals
     import flash.utils.setTimeout;
     
     import org.flexunit.rules.IMethodRule;
-    import org.morefluent.integrations.flexunit4.never;
-    import org.osflash.signals.Signal;
     import org.morefluent.integrations.flexunit4.MorefluentRule;
-    import org.morefluent.integrations.flexunit4.once;
+    import org.morefluent.integrations.flexunit4.signals.never;
+    import org.morefluent.integrations.flexunit4.signals.once;
+    import org.osflash.signals.ISignal;
+    import org.osflash.signals.Signal;
 
     public class TestMorefluentSignalsFU4
     {
         [Rule]
         public var morefluentRule:IMethodRule = new MorefluentRule();
-    
+        
+        private var signal:Signal;
+        
         [Test(async)]
         public function shouldPassOnSignal():void
         {
-            var signal:Signal = new Signal();
+            signal = new Signal();
             
             setTimeout(function():void { signal.dispatch(); }, 500);
     
@@ -46,7 +49,7 @@ package org.morefluent.integrations.flexunit4.signals
         [Test(async, expects="flexunit.framework::AssertionFailedError")]
         public function shouldFailOnSignal():void
         {
-            var signal:Signal = new Signal();
+            signal = new Signal();
             
             setTimeout(function():void { signal.dispatch(); }, 500);
             
@@ -56,7 +59,7 @@ package org.morefluent.integrations.flexunit4.signals
         [Test(async, expects="Error")]
         public function shouldTimeout():void
         {
-            var signal:Signal = new Signal();
+            signal = new Signal();
             
             after(signal).pass();
         }
@@ -64,7 +67,7 @@ package org.morefluent.integrations.flexunit4.signals
         [Test(async)]
         public function shouldCatchSignalAndAssertOnArguments():void
         {
-            var signal:Signal = new Signal(String, Number);
+            signal = new Signal(String, Number);
             
             setTimeout(function():void { signal.dispatch("stringArg", 12345); }, 500);
             
@@ -74,7 +77,7 @@ package org.morefluent.integrations.flexunit4.signals
         [Test(async, expects="flexunit.framework::AssertionFailedError")]
         public function shouldFailWhenAssertingAgainstIncorrectArguments():void
         {
-            var signal:Signal = new Signal(String, Number);
+            signal = new Signal(String, Number);
             
             setTimeout(function():void { signal.dispatch("stringArg", 12345); }, 500);
             
@@ -84,7 +87,7 @@ package org.morefluent.integrations.flexunit4.signals
         [Test]
         public function shouldAllowSynchronousVerificationOfSignalDispatchments():void
         {
-            var signal:Signal = new Signal();
+            signal = new Signal();
             
             observing(signal);
             
@@ -96,7 +99,7 @@ package org.morefluent.integrations.flexunit4.signals
         [Test(expects="flexunit.framework.AssertionFailedError")]
         public function shouldFailSynchronousVerificationOfSignalDispatchments():void
         {
-            var signal:Signal = new Signal();
+            signal = new Signal();
             
             observing(signal);
             
@@ -108,7 +111,7 @@ package org.morefluent.integrations.flexunit4.signals
         [Test]
         public function shouldVerifySignalArgumentsSynchronously():void
         {
-            var signal:Signal = new Signal(String, Number);
+            signal = new Signal(String, Number);
             
             observing(signal);
             
@@ -120,13 +123,56 @@ package org.morefluent.integrations.flexunit4.signals
         [Test(expects="flexunit.framework.AssertionFailedError")]
         public function shouldFailVerifingSignalArgumentsSynchronously():void
         {
-            var signal:Signal = new Signal(String, Number);
+            signal = new Signal(String, Number);
             
             observing(signal);
             
             signal.dispatch("stringArg", 12345);
             
             assert(signal).dispatched(withArguments("stringArg", 54321));
+        }
+        
+        // Would be nice to assert on the error message here too eventually, but may
+        // need to write own FlexUnit utility/hamcrest matcher to do so.
+        [Test(expects="org.morefluent.api.VerifyingOnNonRegisteredObserver")]
+        public function shouldThrowErrorIfAssertingOnSignalThatIsntObserved():void
+        {
+            signal = new Signal();
+            
+            assert(signal).dispatched();
+        }
+        
+        [Test(expects="flexunit.framework.AssertionFailedError")]
+        public function shouldFailIfAssertingOnArgumentsButSignalIsNeverDispatched():void
+        {
+            signal = new Signal(String);
+            
+            observing(signal);
+            
+            assert(signal).dispatched(withArguments("stringArg"));
+        }
+        
+        [Test]
+        public function shouldPassIfObservingSignalAtLeastANumberOfTimes():void
+        {
+            signal = new Signal();
+            
+            observing(signal);
+            
+            signal.dispatch();
+            signal.dispatch();
+            
+            assert(signal).dispatched(atLeast(1));
+        }
+        
+        [Test(expects="flexunit.framework.AssertionFailedError")]
+        public function shouldFailIfNotObservingSignalAtLeastANumberOfTimes():void
+        {
+            signal = new Signal();
+            
+            observing(signal);
+            
+            assert(signal).dispatched(atLeast(1));
         }
     }
 }

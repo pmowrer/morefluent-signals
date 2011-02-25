@@ -20,63 +20,54 @@
 
 package org.morefluent.impl
 {
+    import flash.events.IEventDispatcher;
+    
+    import org.hamcrest.Description;
     import org.hamcrest.Matcher;
-    import org.hamcrest.number.greaterThanOrEqualTo;
-    import org.hamcrest.object.equalTo;
+    import org.hamcrest.StringDescription;
     import org.morefluent.api.AssertableContext;
     import org.morefluent.api.SignalObservationVerifier;
     import org.morefluent.api.VerifiableObservation;
+    import org.morefluent.api.VerifyingOnNonRegisteredObserver;
     import org.osflash.signals.utils.SignalSync;
     import org.osflash.signals.utils.SignalSyncEvent;
     
-    public class SignalArgumentsVerifier extends SignalTimes implements SignalObservationVerifier
+    public class SignalTimes extends BaseSignalVerifier implements SignalObservationVerifier
     {
-        private var args:Array;
+        private var numberMatcher:Matcher;
     
-        public function SignalArgumentsVerifier(args:Array)
+        public function SignalTimes(numberMatcher:Matcher)
         {
-            super(greaterThanOrEqualTo(1));
-                
-            this.args = args;
+            super();
+            
+            this.numberMatcher = numberMatcher;
         }
     
         override public function verify(context:AssertableContext, target:SignalSync):void
         {
             super.verify(context, target);
-            
+                
             var observersOf:Array = context.observersOf(target, SignalSyncEvent.CALLED, false);
-
-            for each (var observation:VerifiableObservation in observersOf)
+            var count:int = 0;
+            
+            for each(var observation:VerifiableObservation in observersOf)
             {
                 var events:Array = observation.eventsFor(target, SignalSyncEvent.CALLED, false);
-    
-                for each(var signalEvent:SignalSyncEvent in events)
-                {
-                    if(args.length != signalEvent.args.length)
-                        context.fail(null, "Expected " + args.length + " signal arguments, but received " + signalEvent.args.length + " arguments.");
-                    
-                    if(!argumentsMatch(signalEvent))
-                        context.fail(null, "Expected signal arguments: " + args + ", but was " + signalEvent.args + ".");
-                }
-            }
-        }
-        
-        private function argumentsMatch(event:SignalSyncEvent):Boolean
-        {
-            for(var index:uint = 0; index < args.length; index++)
-            {
-                var argumentMatcher:Matcher;
-                                
-                if(args[index] is Matcher)
-                    argumentMatcher = args[index];
-                else
-                    argumentMatcher = equalTo(args[index]);
-                
-                if(!argumentMatcher.matches(event.args[index]))
-                    return false;
+                // todo should take care of unique events?
+                count += events.length;
             }
             
-            return true;
+            if(!numberMatcher.matches(count))
+                context.fail(null, "Expected number of dispatches on " + target + " to be " + numberMatcherDescription + " time(s) but observed " + count + " time(s)");
+        }
+        
+        private function get numberMatcherDescription():String
+        {
+            var description:Description = new StringDescription();
+            
+            numberMatcher.describeTo(description);
+            
+            return description.toString();
         }
     }
 }

@@ -20,29 +20,27 @@
 
 package org.morefluent.impl
 {
-    import org.morefluent.api.AssertableContext;
-    import org.morefluent.api.AssertedValue;
-    import org.morefluent.api.Assertion;
-    import org.morefluent.api.AssertionSpecifier;
-    import org.morefluent.api.SignalAssertion;
-    import org.morefluent.api.SignalObservationVerifier;
-
-    public class ImmediateSignalAssertion extends BaseAssertion implements SignalAssertion
-    {
-        public function ImmediateSignalAssertion(context:AssertableContext, assertedValue:AssertedValue, assertionSpecifier:AssertionSpecifier)
-        {
-            super(context, assertedValue, assertionSpecifier);
-        }
+    import flash.events.IEventDispatcher;
     
-        override protected function thatAsserter(asserter:Asserter):Assertion
+    import org.hamcrest.Description;
+    import org.hamcrest.Matcher;
+    import org.hamcrest.StringDescription;
+    import org.morefluent.api.AssertableContext;
+    import org.morefluent.api.SignalObservationVerifier;
+    import org.morefluent.api.VerifiableObservation;
+    import org.morefluent.api.VerifyingOnNonRegisteredObserver;
+    import org.osflash.signals.utils.SignalSync;
+    import org.osflash.signals.utils.SignalSyncEvent;
+    
+    public class BaseSignalVerifier implements SignalObservationVerifier
+    {    
+        public function verify(context:AssertableContext, target:SignalSync):void
         {
-            asserter.assert(context, assertedValue.value);
-            return this;
-        }
-        
-        public function dispatched(verifier:SignalObservationVerifier = null):Assertion
-        {
-            return thatAsserter(new ObservedSignalAsserter(verifier || SignalVerifiers.once()));
+            var observersOf:Array = context.observersOf(target, SignalSyncEvent.CALLED, false);
+
+            if (observersOf.length == 0)
+                throw new VerifyingOnNonRegisteredObserver("Not listening on " + target + ". " +
+                                                           "Did you forget to to add observing('" + target + "); ?");
         }
     }
 }

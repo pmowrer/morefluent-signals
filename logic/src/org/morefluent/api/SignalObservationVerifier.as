@@ -1,7 +1,7 @@
 /**
  * The MIT License
  *
- * Copyright (c) 2011 Morefluent contributors
+ * Copyright (c) 2009 Morefluent contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -17,32 +17,14 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  **/
-
-package org.morefluent.impl
+package org.morefluent.api
 {
-    import org.morefluent.api.AssertableContext;
-    import org.morefluent.api.AssertedValue;
-    import org.morefluent.api.Assertion;
-    import org.morefluent.api.AssertionSpecifier;
-    import org.morefluent.api.SignalAssertion;
-    import org.morefluent.api.SignalObservationVerifier;
-
-    public class ImmediateSignalAssertion extends BaseAssertion implements SignalAssertion
-    {
-        public function ImmediateSignalAssertion(context:AssertableContext, assertedValue:AssertedValue, assertionSpecifier:AssertionSpecifier)
-        {
-            super(context, assertedValue, assertionSpecifier);
-        }
+    import flash.events.IEventDispatcher;
     
-        override protected function thatAsserter(asserter:Asserter):Assertion
-        {
-            asserter.assert(context, assertedValue.value);
-            return this;
-        }
-        
-        public function dispatched(verifier:SignalObservationVerifier = null):Assertion
-        {
-            return thatAsserter(new ObservedSignalAsserter(verifier || SignalVerifiers.once()));
-        }
+    import org.osflash.signals.utils.SignalSync;
+    
+    public interface SignalObservationVerifier
+    {
+        function verify(context:AssertableContext, target:SignalSync):void;
     }
 }
