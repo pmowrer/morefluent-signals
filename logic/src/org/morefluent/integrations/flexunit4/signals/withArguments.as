@@ -23,8 +23,8 @@ package org.morefluent.integrations.flexunit4.signals
     import org.morefluent.api.ObservationVerifier;
     import org.morefluent.impl.SignalArgumentsVerifier;
     
-    public function withArguments(args:Array):ObservationVerifier
+    public function withArguments(... rest):ObservationVerifier
     {
-        return new SignalArgumentsVerifier(args);
+        return new SignalArgumentsVerifier(rest);
     }
 }

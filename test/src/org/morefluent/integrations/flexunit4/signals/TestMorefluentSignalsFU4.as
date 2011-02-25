@@ -114,7 +114,7 @@ package org.morefluent.integrations.flexunit4.signals
             
             signal.dispatch("stringArg", 12345);
             
-            assert(signal).dispatched(withArguments(["stringArg", 12345]));
+            assert(signal).dispatched(withArguments("stringArg", 12345));
         }
 
         [Test(expects="flexunit.framework.AssertionFailedError")]
@@ -126,7 +126,7 @@ package org.morefluent.integrations.flexunit4.signals
             
             signal.dispatch("stringArg", 12345);
             
-            assert(signal).dispatched(withArguments(["stringArg", 54321]));
+            assert(signal).dispatched(withArguments("stringArg", 54321));
         }
     }
 }
