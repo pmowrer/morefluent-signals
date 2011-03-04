@@ -5,9 +5,8 @@ morefluent-signals is an extension library for morefluent, an AS3 library that m
 morefluent-signals makes use of [as3-signals-utilities-async](https://github.com/eidiot/as3-signals-utilities-async/) (baked-in), and depends on [morefluent](https://bitbucket.org/loomis/morefluent/wiki/Home), [as3-signals](https://github.com/robertpenner/as3-signals) and [hamcrest-as3](https://github.com/drewbourne/hamcrest-as3) (you'll have to get those yourself). It's been tested to be compatible with morefluent 1.2M8, as3-signals 0.8 and hamcrest 1.1.1.
 
 For more on how to use morefluent, see the repository wiki on bitbucket:
-https://bitbucket.org/loomis/morefluent/wiki/Home
+[https://bitbucket.org/loomis/morefluent/wiki/Home](http://patrickmowrer.com/2011/03/04/flexunit4-testing-morefluent-signals)
 
 For a brief introduction to morefluent-signals, see:
-[Introduction post](http://patrickmowrer.com/2011/03/04/)
-
+[http://patrickmowrer.com/2011/03/04/flexunit4-testing-morefluent-signals](http://patrickmowrer.com/2011/03/04/flexunit4-testing-morefluent-signals)
 
