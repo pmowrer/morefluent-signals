@@ -49,15 +49,17 @@ package org.morefluent.impl
             for each (var observation:VerifiableObservation in observersOf)
             {
                 var events:Array = observation.eventsFor(target, SignalSyncEvent.CALLED, false);
-    
+                
                 for each(var signalEvent:SignalSyncEvent in events)
                 {
                     if(args.length != signalEvent.args.length)
                         context.fail(null, "Expected " + args.length + " signal arguments, but received " + signalEvent.args.length + " arguments.");
                     
-                    if(!argumentsMatch(signalEvent))
-                        context.fail(null, "Expected signal arguments: " + args + ", but was " + signalEvent.args + ".");
+                    if(argumentsMatch(signalEvent))
+                        return;
                 }
+                
+                context.fail(null, "Expected signal arguments: " + args + ", but was " + signalEvent.args + ".");
             }
         }
         
